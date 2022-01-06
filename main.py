@@ -8,10 +8,10 @@ import statistics
 DHT_SENSOR = Adafruit_DHT.DHT22
 DHT_PIN = 4
 RELAY_GPIO = 27
-READ_BUFFER = 10
+READ_BUFFER = 8
 MAX_HUMIDITY = 88
 MIN_HUMIDITY = 83
-SLEEP = 60
+SLEEP = 15
 relay_state = 0
 
 def main():
@@ -50,15 +50,15 @@ def read_humidity(temps, humids):
     humidity, temperature = Adafruit_DHT.read_retry(DHT_SENSOR, DHT_PIN)
 
     if humidity is not None and temperature is not None:
-        temps.append(temperature)
         humids.append(humidity)
+        temps.append(temperature)
 
         if len(temps) >= READ_BUFFER:
+            humids.pop(0)
             temps.pop(0)
-            humidity.pop(0)
         
-        t = statistics.median(temps)
         h = statistics.median(humids)
+        t = statistics.median(temps)
 
         if h >= MAX_HUMIDITY and relay_state == 0:
             set_relay_high()
