@@ -104,7 +104,7 @@ def save_metrics(humidity, temperature):
     metrics.append('# TYPE relay_state gauge\n')
     metrics.append(f'relay_state {relay_state}\n')
 
-    with open('metrics', 'w') as file:
+    with open('/home/pi/metrics', 'w') as file:
         file.writelines(metrics)
 
 if __name__  == "__main__":

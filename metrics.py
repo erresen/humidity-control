@@ -4,12 +4,9 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
-        self.send_response(200)
-        self.send_header('Content-type','text/plain')
-
         try:
             #Reading the file
-            file_to_open = open('metrics').read()
+            file_to_open = open('/home/pi/metrics').read()
             self.send_response(200)
         except:
             file_to_open = "File not found"
