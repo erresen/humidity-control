@@ -11,6 +11,7 @@ RELAY_GPIO = 27
 READ_BUFFER = 8
 MAX_HUMIDITY = 88
 MIN_HUMIDITY = 83
+MIN_TEMP = 9
 SLEEP = 15
 relay_state = 0
 
@@ -33,7 +34,7 @@ def main():
 def initial_read():
     humidity, temperature = Adafruit_DHT.read_retry(DHT_SENSOR, DHT_PIN)
     
-    if humidity >= MAX_HUMIDITY:
+    if humidity >= MAX_HUMIDITY and temperature >= MIN_TEMP:
         set_relay_high()
     else:
         set_relay_low()
@@ -60,9 +61,9 @@ def read_humidity(temps, humids):
         h = statistics.median(humids)
         t = statistics.median(temps)
 
-        if h >= MAX_HUMIDITY and relay_state == 0:
+        if h >= MAX_HUMIDITY and t >= MIN_TEMP and relay_state == 0:
             set_relay_high()
-        elif h <= MIN_HUMIDITY and relay_state == 1:
+        elif (h <= MIN_HUMIDITY or t < MIN_TEMP) and relay_state == 1:
             set_relay_low()
         
         save_metrics(h, t)
